@@ -1,5 +1,5 @@
-#include "tmpl-tests.h"
-#include "template.h"
+#include "tltn-tests.h"
+#include "tltn.h"
 
 TEST(InitTerminate, Basic, 0.0f,
      // initialisation
@@ -8,17 +8,17 @@ TEST(InitTerminate, Basic, 0.0f,
      },
      // cleanup
      {
-	 tmplTerminateContext(&m_data.context);
+	 tltnTerminateContext(&m_data.context);
      },
      // test
      {
-	 ASSERT(tmplInitContext(&m_data.context) == TMPL_SUCCESS);
+	 ASSERT(tltnInitContext(&m_data.context, 23) == TLTN_SUCCESS);
       ASSERT(m_data.context != 0);
-	 ASSERT(tmplTerminateContext(&m_data.context) == TMPL_SUCCESS);
+	 ASSERT(tltnTerminateContext(&m_data.context) == TLTN_SUCCESS);
       ASSERT(m_data.context == 0)
      },
      // data
      {
-	 tmplContext* context;
+	 tltnContext* context;
      }
     );

@@ -1,10 +1,10 @@
-solution "template"
+solution "tltn"
 language "C++"
 configurations { "Debug", "Release" }
 includedirs { "include", "src/include" }
 files { "include/**.h" }
 
-defines { "TMPL_BUILD" }
+defines { "TLTN_BUILD" }
 
 configuration "Debug"
 defines { "DEBUG" }
@@ -19,19 +19,31 @@ flags { "OptimizeSpeed",
 	"NoFramePointer" }
 targetdir "build/release"
 
-project "template"
+project "tltn"
 kind "StaticLib"
 files { "src/**.c", "src/**.cpp" }
 
-project "template-dynamic"
+project "tltn-lite"
+kind "StaticLib"
+files { "src/**.c", "src/**.cpp" }
+defines { "TLTN_UNSAFE" }
+
+--[[
+project "tltn-dynamic"
 kind "SharedLib"
 files { "src/**.c", "src/**.cpp" }
-targetname "template"
+targetname "tltn"
+--]]
+
+project "tltnd"
+kind "ConsoleApp"
+files { "sample/main.c" }
+links { "tltn-lite" }
 
 project "tests"
 kind "ConsoleApp"
 files { "tests/**.cpp" }
-links { "template" }
+links { "tltn" }
 configuration "Debug"
 postbuildcommands("build/debug/tests")
 configuration "Release"
