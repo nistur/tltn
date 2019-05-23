@@ -1,5 +1,7 @@
 #include "tltn_internal.h"
 
+#include <stdio.h>
+
 tltnReturn tltnClearContext(tltnContext* context)
 {
     tltnReturnCode(SUCCESS);
@@ -8,11 +10,8 @@ tltnReturn tltnClearContext(tltnContext* context)
 tltnReturn tltnInitContext(tltnContext** context, tltnPort port)
 {
     TLTN_NULL_CHECK(context, NO_CONTEXT);
-    
-    *context = tltnMalloc(tltnContext);
 
-    if(TLTN_FAILED(tltnClearContext(*context)) ||
-	TLTN_FAILED(tltnListen(*context, port)))
+    if(TLTN_FAILED(tltnListen(context, port)))
     {
 	   tltnTerminateContext(context);
 	   tltnReturn();
@@ -25,6 +24,11 @@ tltnReturn tltnTerminateContext(tltnContext** context)
 {
     TLTN_NULL_CHECK(context, NO_CONTEXT);
 
+    if(TLTN_FAILED(tltnStop(*context)))
+    {
+	tltnReturn();
+    }
+    
     tltnFree(*context);
     *context = 0;
     tltnReturnCode(SUCCESS);
@@ -33,6 +37,8 @@ tltnReturn tltnTerminateContext(tltnContext** context)
 tltnReturn tltnAddEventHandler(tltnContext* context, tltnEvent event, tltnEventCb handler)
 {
     TLTN_NULL_CHECK(context, NO_CONTEXT);
+
+    context->m_EventHandlers[event] = handler;
     
     tltnReturnCode(SUCCESS);
 }
@@ -40,14 +46,16 @@ tltnReturn tltnAddEventHandler(tltnContext* context, tltnEvent event, tltnEventC
 tltnReturn tltnSendEvent(tltnSession* session, tltnEvent event, tltnConstStr message)
 {
     TLTN_NULL_CHECK(session, NO_SESSION);
+
+    if( event == TLTN_EVT_MSG )
+    {
+	if( TLTN_FAILED(tltnSendMessage(session, message)) )
+	{
+	    tltnReturn();
+	}
+    }	
+	
     
-    tltnReturnCode(SUCCESS);
-}
-
-tltnReturn tltnUpdate(tltnContext* context)
-{
-    TLTN_NULL_CHECK(context, NO_CONTEXT);
-
     tltnReturnCode(SUCCESS);
 }
 

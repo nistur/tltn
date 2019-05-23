@@ -4,13 +4,9 @@
 
 #include "tltn.h"
 
-/***************************************
- * Library context
- * - holds current state
- ***************************************/
 struct _tltnContext
 {
-    int m_ListeningSocket;
+    tltnEventCb m_EventHandlers[TLTN_EVT_MAX];
 };
 
 struct _tltnSession
@@ -20,8 +16,11 @@ struct _tltnSession
 /***************************************
  * Network interface
  ***************************************/
-tltnReturn tltnListen(tltnContext* context, tltnPort port);
+tltnReturn tltnListen(tltnContext** context, tltnPort port);
+tltnReturn tltnStop(tltnContext* context);
+tltnReturn tltnSendMessage(tltnSession* session, tltnConstStr message);
 
+tltnReturn tltnClearContext(tltnContext* context);
 /***************************************
  * Some basic memory management wrappers
  ***************************************/
@@ -37,7 +36,7 @@ tltnReturn tltnListen(tltnContext* context, tltnPort port);
 # define tltnReturnCode(x) return
 # define tltnReturn() return
 # define TLTN_NULL_CHECK(val, ret) {}
-# define TLTN_FAILED(fn) 0
+# define TLTN_FAILED(fn)  0){} fn; if(0
 
 #else/*TLTN_UNSAFE*/
 extern tltnReturn  g_tltnError;
@@ -64,5 +63,7 @@ extern const char* g_tltnErrors[];
 
 # define TLTN_FAILED(fn) (fn != TLTN_SUCCESS)
 #endif/*TLTN_UNSAFE*/
+
+#include "tltn_internal_posix.h"
 
 #endif/*__TLTN_INTERNAL_H__*/

@@ -30,7 +30,7 @@ typedef struct _tltnSession tltnSession;
 typedef void(*tltnEventCb)(tltnSession* session, tltnConstStr message);
 
 #ifdef TLTN_UNSAFE
-    typedef void tltnReturn;
+typedef void tltnReturn;
 #else/*TLTN_UNSAFE*/
 typedef enum
 {
@@ -46,6 +46,8 @@ typedef enum
     TLTN_EVT_OPEN,
     TLTN_EVT_MSG,
     TLTN_EVT_CLOSE,
+
+    TLTN_EVT_MAX
 } tltnEvent;
 
 TLTN_EXPORT tltnReturn   tltnInitContext     (tltnContext** context, tltnPort port);

@@ -2,7 +2,7 @@
 
 #include <unistd.h>
 
-#define PROMPT "tltn>"
+#define PROMPT "tltn> "
 
 void handleConnect(tltnSession* session, tltnConstStr message)
 {
@@ -18,7 +18,7 @@ void handleMessage(tltnSession* session, tltnConstStr message)
 int main(int argc, char** argv)
 {
     tltnContext* ctx;
-    tltnInitContext(&ctx, 23);
+    tltnInitContext(&ctx, 2323);
 
     tltnAddEventHandler(ctx, TLTN_EVT_OPEN, handleConnect);
     tltnAddEventHandler(ctx, TLTN_EVT_MSG, handleMessage);
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     while(1)
     {
 	tltnUpdate(ctx);
-	sleep(1);
+	//sleep(1);
     }
 
     tltnTerminateContext(&ctx);
