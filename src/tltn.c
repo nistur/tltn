@@ -1,7 +1,5 @@
 #include "tltn_internal.h"
 
-#include <stdio.h>
-
 tltnReturn tltnClearContext(tltnContext* context)
 {
     tltnReturnCode(SUCCESS);
@@ -43,17 +41,28 @@ tltnReturn tltnAddEventHandler(tltnContext* context, tltnEvent event, tltnEventC
     tltnReturnCode(SUCCESS);
 }
 
-tltnReturn tltnSendEvent(tltnSession* session, tltnEvent event, tltnConstStr message)
+tltnReturn tltnSendEvent(tltnSession* session, tltnEvent event, tltnConstMsg message, tltnSize size)
 {
     TLTN_NULL_CHECK(session, NO_SESSION);
 
     if( event == TLTN_EVT_MSG )
     {
-	if( TLTN_FAILED(tltnSendMessage(session, message)) )
+	if( TLTN_FAILED(tltnSendMessage(session, message, size)) )
 	{
 	    tltnReturn();
 	}
-    }	
+    }
+    else if( event == TLTN_EVT_CLOSE )
+    {
+	if( TLTN_FAILED(tltnSendMessage(session, message, size)) )
+	{
+	    tltnReturn();
+	}
+	if( TLTN_FAILED(tltnCloseSession(session)) )
+	{
+	    tltnReturn();
+	}
+    }
 	
     
     tltnReturnCode(SUCCESS);

@@ -22,12 +22,13 @@ extern "C" {
 //typedef int tltnReturn;
 typedef short int tltnPort;
 typedef char* tltnStr;
-typedef const tltnStr tltnConstStr;
+typedef const tltnStr tltnConstMsg;
+typedef long int tltnSize;
     
 typedef struct _tltnContext tltnContext;
 typedef struct _tltnSession tltnSession;
 
-typedef void(*tltnEventCb)(tltnSession* session, tltnConstStr message);
+typedef void(*tltnEventCb)(tltnSession* session, tltnConstMsg message, tltnSize size);
 
 #ifdef TLTN_UNSAFE
 typedef void tltnReturn;
@@ -54,7 +55,7 @@ TLTN_EXPORT tltnReturn   tltnInitContext     (tltnContext** context, tltnPort po
 TLTN_EXPORT tltnReturn   tltnTerminateContext(tltnContext** context);
 
 TLTN_EXPORT tltnReturn   tltnAddEventHandler (tltnContext* context, tltnEvent event, tltnEventCb handler);
-TLTN_EXPORT tltnReturn   tltnSendEvent       (tltnSession* session, tltnEvent event, tltnConstStr message);
+TLTN_EXPORT tltnReturn   tltnSendEvent       (tltnSession* session, tltnEvent event, tltnConstMsg message, tltnSize size);
     
 TLTN_EXPORT tltnReturn   tltnUpdate          (tltnContext* context);
 

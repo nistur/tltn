@@ -93,7 +93,7 @@ tltnReturn tltnUpdate(tltnContext* contextBase)
 
     if(FD_ISSET(context->m_ListeningSocket, &readfs))
     {
-	char remoteIP[INET6_ADDRSTRLEN];
+//	char remoteIP[INET6_ADDRSTRLEN];
 	struct sockaddr_storage remoteaddr;
 	socklen_t addrlen = sizeof(remoteaddr);
 	int newfd = accept(context->m_ListeningSocket, (struct sockaddr*)&remoteaddr, &addrlen);
@@ -110,7 +110,7 @@ tltnReturn tltnUpdate(tltnContext* contextBase)
 	struct _tltnSession_posix session;
 	session.m_SessionSocket = newfd;
 	
-	contextBase->m_EventHandlers[TLTN_EVT_OPEN](&session.m_Session, "");
+	contextBase->m_EventHandlers[TLTN_EVT_OPEN](&session.m_Session, "", 0);
     }
 
     if(context->m_ConnectionSockets)
@@ -127,7 +127,7 @@ tltnReturn tltnUpdate(tltnContext* contextBase)
 		{
 		    struct _tltnSession_posix session;
 		    session.m_SessionSocket = context->m_ConnectionSockets[i];
-		    contextBase->m_EventHandlers[TLTN_EVT_MSG](&session.m_Session, buffer);
+		    contextBase->m_EventHandlers[TLTN_EVT_MSG](&session.m_Session, buffer, n);
 		}
 	    }
 	}
@@ -136,12 +136,22 @@ tltnReturn tltnUpdate(tltnContext* contextBase)
     tltnReturnCode(SUCCESS);
 }
 
-tltnReturn tltnSendMessage(tltnSession* sessionBase, tltnConstStr message)
+tltnReturn tltnSendMessage(tltnSession* sessionBase, tltnConstMsg message, tltnSize size)
 {
     struct _tltnSession_posix* session = (struct _tltnSession_posix*)sessionBase;
     TLTN_NULL_CHECK(session, NO_CONTEXT);
 
-    send(session->m_SessionSocket, message, strlen(message), 0);
+    send(session->m_SessionSocket, message, size, 0);
+    
+    tltnReturnCode(SUCCESS);
+}
+
+tltnReturn tltnCloseSession(tltnSession* sessionBase)
+{
+    struct _tltnSession_posix* session = (struct _tltnSession_posix*)sessionBase;
+    TLTN_NULL_CHECK(session, NO_CONTEXT);
+
+    close(session->m_SessionSocket);
     
     tltnReturnCode(SUCCESS);
 }

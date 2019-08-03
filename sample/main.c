@@ -1,18 +1,29 @@
 #include "tltn.h"
 
-#include <unistd.h>
+#include <string.h>
+
+#define MSG(X) X, strlen(X)
 
 #define PROMPT "tltn> "
 
-void handleConnect(tltnSession* session, tltnConstStr message)
+#define EOT 0x04
+
+void handleConnect(tltnSession* session, tltnConstMsg message, tltnSize size)
 {
-    tltnSendEvent(session, TLTN_EVT_MSG, PROMPT);
+    tltnSendEvent(session, TLTN_EVT_MSG, MSG(PROMPT));
 }
 
-void handleMessage(tltnSession* session, tltnConstStr message)
+void handleMessage(tltnSession* session, tltnConstMsg message, tltnSize size)
 {
-    tltnSendEvent(session, TLTN_EVT_MSG, message);
-    tltnSendEvent(session, TLTN_EVT_MSG, PROMPT);
+    if(size == 1 && message[0] == EOT)
+    {
+	tltnSendEvent(session, TLTN_EVT_CLOSE, MSG("Bye\n"));
+    }
+    else
+    {
+	tltnSendEvent(session, TLTN_EVT_MSG, message, size);
+	tltnSendEvent(session, TLTN_EVT_MSG, MSG(PROMPT));
+    }
 }
 
 int main(int argc, char** argv)

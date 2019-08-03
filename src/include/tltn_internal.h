@@ -18,7 +18,8 @@ struct _tltnSession
  ***************************************/
 tltnReturn tltnListen(tltnContext** context, tltnPort port);
 tltnReturn tltnStop(tltnContext* context);
-tltnReturn tltnSendMessage(tltnSession* session, tltnConstStr message);
+tltnReturn tltnSendMessage(tltnSession* session, tltnConstMsg message, tltnSize size);
+tltnReturn tltnCloseSession(tltnSession* session);
 
 tltnReturn tltnClearContext(tltnContext* context);
 /***************************************
