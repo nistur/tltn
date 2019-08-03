@@ -109,6 +109,7 @@ tltnReturn tltnUpdate(tltnContext* contextBase)
 
 	struct _tltnSession_posix session;
 	session.m_SessionSocket = newfd;
+	session.m_Context = context;
 	
 	contextBase->m_EventHandlers[TLTN_EVT_OPEN](&session.m_Session, "", 0);
     }
@@ -151,6 +152,8 @@ tltnReturn tltnCloseSession(tltnSession* sessionBase)
     struct _tltnSession_posix* session = (struct _tltnSession_posix*)sessionBase;
     TLTN_NULL_CHECK(session, NO_CONTEXT);
 
+    FD_CLR(session->m_SessionSocket, &session->m_Context->m_Connections);
+    
     close(session->m_SessionSocket);
     
     tltnReturnCode(SUCCESS);

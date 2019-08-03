@@ -29,6 +29,7 @@ struct _tltnSession_posix
     struct _tltnSession m_Session;
 
     int m_SessionSocket;
+    struct _tltnContext_posix* m_Context;
 };
 
 #endif/*__TLTN_INTERNAL_POSIX_H__*/
