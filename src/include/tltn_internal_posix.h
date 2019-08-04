@@ -20,7 +20,7 @@ struct _tltnContext_posix
     struct _tltnContext m_Context;
     int m_ListeningSocket;
     fd_set m_Connections;
-    int* m_ConnectionSockets;
+    VEC(int) m_ConnectionSockets;
     int m_MaxSocket;
 };
 

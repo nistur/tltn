@@ -65,6 +65,10 @@ extern const char* g_tltnErrors[];
 # define TLTN_FAILED(fn) (fn != TLTN_SUCCESS)
 #endif/*TLTN_UNSAFE*/
 
+// Some syntactic sugar around Nothings.org stretchy buffers
+// to make it clear that this is a vector type
+#define VEC(TYPE) TYPE*
+
 #include "tltn_internal_posix.h"
 
 #endif/*__TLTN_INTERNAL_H__*/
